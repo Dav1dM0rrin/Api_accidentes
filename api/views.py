@@ -7,10 +7,10 @@ from rest_framework import viewsets
 
 
 class AccidentePagination(PageNumberPagination):
-    page_size = 50
+    page_size = 5
     page_size_query_param = "page_size"
     min_page_size = 1
-    max_page_size = 50
+    max_page_size = 5
 
     def get_page_size(self, request):
         page_size = request.query_params.get(self.page_size_query_param, self.page_size)
