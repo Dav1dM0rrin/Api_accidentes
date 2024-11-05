@@ -17,6 +17,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'whitenoise.runserver_nostatic',
     'rest_framework.authtoken',
     'django_filters',
     'rest_framework',
@@ -28,6 +29,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -67,7 +69,8 @@ DATABASES = {
     }
 }
 
-DATABASES["default"] = dj_database_url.parse("postgresql://accidentes_user:OrhHIrcA80MSOQdsyFGOdlxohfyQDuAO@dpg-csknl7aj1k6c73bkb260-a.oregon-postgres.render.com/accidentes")
+
+DATABASES["default"] = dj_database_url.parse("postgresql://accidentes_y64i_user:U0n11283NpiaJ9yCD3BhTAdYDWsCTPti@dpg-csko9e2j1k6c73bkke9g-a.oregon-postgres.render.com/accidentes_y64i")
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -101,3 +104,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Model Usuario
 AUTH_USER_MODEL = 'autenticacion.Usuario'
+
+STATIC_URL = '/static/'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
