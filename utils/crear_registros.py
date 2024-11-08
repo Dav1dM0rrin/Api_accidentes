@@ -215,7 +215,7 @@ barrios = [
     Barrio(nombre="Villa Campestre", zona=zona_fk("Riomar")),
     Barrio(nombre="Villa Carolina", zona=zona_fk("Riomar")),
     Barrio(nombre="Villa del Este", zona=zona_fk("Riomar")),
-    Barrio(nombre="	Villa Santos", zona=zona_fk("Riomar")),
+    Barrio(nombre="Villa Santos", zona=zona_fk("Riomar")),
 ]
 
 

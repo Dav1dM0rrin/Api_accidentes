@@ -4,7 +4,10 @@ from api import views
 
 
 router = routers.DefaultRouter()
-router.register(r"accidentes", views.AccidenteViewSet)
+router.register(r"tipo_vias", views.ZonaViewSet, basename="tipo_via")
+router.register(r"zonas", views.ZonaViewSet, basename="zona")
+router.register(r"barrios", views.BarrioViewSet, basename="barrio")
+router.register(r"accidentes", views.AccidenteViewSet, basename="accidente")
 
 
 urlpatterns = [

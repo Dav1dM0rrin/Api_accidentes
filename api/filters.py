@@ -1,5 +1,25 @@
-from accidente.models import Accidente
+from accidente.models import *
 import django_filters
+
+
+class TipoViaFilter(django_filters.FilterSet):
+    nombre = django_filters.CharFilter(field_name="nombre", lookup_expr="iexat")
+
+
+class ZonaFilter(django_filters.FilterSet):
+    zona = django_filters.CharFilter(field_name="nombre", lookup_expr="icontains")
+
+
+class BarrioFilter(django_filters.FilterSet):
+    barrio = django_filters.CharFilter(field_name="nombre", lookup_expr="iexact")
+    zona = django_filters.CharFilter(field_name="zona__nombre", lookup_expr="icontains")
+
+    class Meta:
+        model = Barrio
+        fields = [
+            'barrio',
+            'zona',
+        ]
 
 
 class AccidenteFilter(django_filters.FilterSet):

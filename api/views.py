@@ -1,33 +1,38 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.pagination import PageNumberPagination
-from api.serializer import AccidenteSerializer
-from api.filters import AccidenteFilter
+from commands.pagination import Pagination
 from accidente.models import Accidente
 from rest_framework import viewsets
+from api.serializer import *
+from api.filters import *
 
 
-class AccidentePagination(PageNumberPagination):
-    page_size = 5
-    page_size_query_param = "page_size"
-    min_page_size = 1
-    max_page_size = 5
+class ZonaViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Zona.objects.all()
+    serializer_class = ZonaSerializer
+    pagination_class = Pagination
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = ZonaFilter
 
-    def get_page_size(self, request):
-        page_size = request.query_params.get(self.page_size_query_param, self.page_size)
 
-        try:
-            page_size = int(page_size)
-        except (ValueError, TypeError):
-            page_size = self.page_size
+class BarrioViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Barrio.objects.all()
+    serializer_class = BarrioSerializer
+    pagination_class = Pagination
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = BarrioFilter
 
-        page_size = max(self.min_page_size, min(page_size, self.max_page_size))
 
-        return page_size
+class TipoViaViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = TipoVia.objects.all()
+    serializer_class = TipoViaSerializer
+    pagination_class = Pagination
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = TipoViaFilter
 
 
 class AccidenteViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Accidente.objects.all().order_by("-id")
     serializer_class = AccidenteSerializer
-    pagination_class = AccidentePagination
+    pagination_class = Pagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = AccidenteFilter
