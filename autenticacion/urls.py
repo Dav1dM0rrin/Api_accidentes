@@ -5,5 +5,5 @@ from autenticacion import views
 urlpatterns = [
     path("registro", views.registro),
     path("login", views.login),
-    path("perfil", views.perfil),
+    path("logout", views.logout),
 ]

@@ -39,6 +39,13 @@ MIDDLEWARE = [
 ]
 
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
+
+
 ROOT_URLCONF = 'backend.urls'
 
 
@@ -70,7 +77,7 @@ DATABASES = {
 }
 
 
-DATABASES["default"] = dj_database_url.parse("postgresql://accidentes_y64i_user:U0n11283NpiaJ9yCD3BhTAdYDWsCTPti@dpg-csko9e2j1k6c73bkke9g-a.oregon-postgres.render.com/accidentes_y64i")
+# DATABASES["default"] = dj_database_url.parse("postgresql://accidentes_y64i_user:U0n11283NpiaJ9yCD3BhTAdYDWsCTPti@dpg-csko9e2j1k6c73bkke9g-a.oregon-postgres.render.com/accidentes_y64i")
 
 
 AUTH_PASSWORD_VALIDATORS = [

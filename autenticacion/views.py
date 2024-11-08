@@ -1,8 +1,10 @@
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.authentication import TokenAuthentication
 from autenticacion.serializer import UsuarioSerializer
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view
-from autenticacion.models import Usuario, Rol
 from rest_framework.response import Response
+from autenticacion.models import Usuario
 from rest_framework import status
 
 
@@ -32,9 +34,6 @@ def registro(request):
     usuario.username = username
     usuario.set_password(serializer.validated_data["password"])
     usuario.email = serializer.validated_data["email"]
-
-    rol, created = Rol.objects.get_or_create(nombre="Usuario")
-    usuario.rol = rol
     usuario.save()
 
     token = Token.objects.create(user=usuario)
@@ -44,19 +43,8 @@ def registro(request):
 
 @api_view(["POST"])
 def login(request):
-
-    username = Usuario.formatear_username(
-        request.data.get("primer_apellido"),
-        request.data.get("segundo_apellido"),
-        request.data.get("primer_nombre"),
-        request.data.get("segundo_nombre")
-    )
-
     email = request.data.get("email")
     password = request.data.get("password")
-
-    if not Usuario.objects.filter(username=username).exists():
-        return Response({"error": "La cuenta no existe"}, status=status.HTTP_401_UNAUTHORIZED)
 
     if not Usuario.objects.filter(email=email).exists():
         return Response({"error": "El correo no existe"}, status=status.HTTP_401_UNAUTHORIZED)
@@ -64,8 +52,7 @@ def login(request):
     usuario = Usuario.objects.get(email=email)
 
     if not usuario.check_password(password):
-        return Response({"error": "La contraseña es incorrecta"}, status=status.HTTP_401_UNAUTHORIZED)
-
+        return Response({"error": "La contraseña es incorrecta o no se ha ingresado"}, status=status.HTTP_401_UNAUTHORIZED)
 
     token, created = Token.objects.get_or_create(user=usuario)
     serializer = UsuarioSerializer(instance=usuario)
@@ -73,7 +60,15 @@ def login(request):
     return Response({"token": token.key, "user": serializer.data}, status=status.HTTP_201_CREATED)
 
 
-
 @api_view(["POST"])
-def perfil(request):
-    return Response({})
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def logout(request):
+    token = request.auth
+
+    if not token:
+        return Response({"error": "No se encontró el token de autenticación"}, status=status.HTTP_400_BAD_REQUEST)
+
+    token.delete()
+
+    return Response({"message": "Sesión cerrada exitosamente"}, status=status.HTTP_200_OK)
