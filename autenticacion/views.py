@@ -23,41 +23,56 @@ def registro(request):
         serializer.validated_data["segundo_nombre"]
     )
 
-    if Usuario.objects.filter(username=username).exists():
+    if Usuario.existe(username):
         return Response({"error": "La cuenta ya existe"}, status=status.HTTP_400_BAD_REQUEST)
 
-    if Usuario.objects.filter(email=serializer.validated_data["email"]).exists():
+    email = serializer.validated_data["email"]
+
+    if Usuario.email_existe(email):
         return Response({"error": "El correo ya existe"}, status=status.HTTP_400_BAD_REQUEST)
 
-    usuario = serializer.save()
+    usuario = Usuario(**serializer.validated_data)
 
     usuario.username = username
     usuario.set_password(serializer.validated_data["password"])
     usuario.email = serializer.validated_data["email"]
-    usuario.save()
+    usuario.save()  # Guardar el usuario después de encriptar la contraseña
+
 
     token = Token.objects.create(user=usuario)
 
     return Response({"token": token.key, "user": serializer.data},status=status.HTTP_201_CREATED)
 
 
+# LOGIN
 @api_view(["POST"])
 def login(request):
     email = request.data.get("email")
     password = request.data.get("password")
 
-    if not Usuario.objects.filter(email=email).exists():
+    print(f"Intentando iniciar sesion con {email}")
+
+    if not Usuario.email_existe(email):
+        print("Correo no encontrado en la BD")
         return Response({"error": "El correo no existe"}, status=status.HTTP_401_UNAUTHORIZED)
 
+
     usuario = Usuario.objects.get(email=email)
+    print(f"Usuario encontrado {usuario.username}")
+
+    print(f"Contraseña recibida: {password}")
 
     if not usuario.check_password(password):
         return Response({"error": "La contraseña es incorrecta o no se ha ingresado"}, status=status.HTTP_401_UNAUTHORIZED)
 
+    
+    
     token, created = Token.objects.get_or_create(user=usuario)
     serializer = UsuarioSerializer(instance=usuario)
 
-    return Response({"token": token.key, "user": serializer.data}, status=status.HTTP_201_CREATED)
+    return Response({"token": token.key,
+                      "user": serializer.data,
+                      "role":"admin" if usuario.is_superuser else "user"}, status=status.HTTP_201_CREATED)
 
 
 @api_view(["POST"])

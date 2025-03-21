@@ -39,6 +39,7 @@ class TipoAccidenteAdmin(admin.ModelAdmin):
 class AccidenteAdmin(admin.ModelAdmin):
     readonly_fields = ("created", "updated")
 
+
 admin.site.register(Zona, ZonaAdmin)
 admin.site.register(Barrio, BarrioAdmin)
 admin.site.register(TipoVia, TipoViaAdmin)

@@ -8,6 +8,14 @@ class Usuario(AbstractUser):
     primer_apellido = models.CharField(max_length=50, null=False)
     segundo_apellido = models.CharField(max_length=50, null=False)
 
+    @classmethod
+    def existe(cls, username):
+        return cls.objects.filter(username=username).exists()
+
+    @classmethod
+    def email_existe(cls, email):
+        return cls.objects.filter(email=email).exists()
+
     @staticmethod
     def formatear_username(primer_apellido, segundo_apellido, primer_nombre, segundo_nombre=None):
         if segundo_nombre is None:

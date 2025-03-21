@@ -1,5 +1,8 @@
 from pathlib import Path
 import dj_database_url
+import pymysql
+
+pymysql.install_as_MySQLdb()
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -7,10 +10,11 @@ SECRET_KEY = 'django-insecure-9jq_)f7ads+bdzb+@4=1br=^v7_(eu$hh9%q6*wvwcy#-%+d9s
 
 
 DEBUG = True
-ALLOWED_HOSTS = ["*"]
+CORS_ALLOW_ALL_ORIGINS = True  # Solo para pruebas, en producción define dominios permitidos
 
 
 INSTALLED_APPS = [
+     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -28,6 +32,8 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -71,10 +77,18 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'accidentesbaq',  # Cambia esto al nombre real de tu BD en MySQL
+        'USER': 'root',
+        'PASSWORD': 'david1928',
+        'HOST': 'localhost',  # O la IP del servidor MySQL
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        }
     }
 }
+
 
 
 # DATABASES["default"] = dj_database_url.parse("postgresql://accidentes_y64i_user:U0n11283NpiaJ9yCD3BhTAdYDWsCTPti@dpg-csko9e2j1k6c73bkke9g-a.oregon-postgres.render.com/accidentes_y64i")
