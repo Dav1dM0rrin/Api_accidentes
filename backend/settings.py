@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 import dj_database_url
 import pymysql
@@ -9,9 +10,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-9jq_)f7ads+bdzb+@4=1br=^v7_(eu$hh9%q6*wvwcy#-%+d9s'
 
 
-DEBUG = True
-CORS_ALLOW_ALL_ORIGINS = True  # Solo para pruebas, en producción define dominios permitidos
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
+CORS_ALLOW_ALL_ORIGINS = True  # Solo para pruebas, en producción define dominios permitidos
+ALLOWED_HOSTS = ['.onrender.com', 'localhost']
 
 INSTALLED_APPS = [
      'corsheaders',
@@ -132,3 +134,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Seguridad en producción
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+CSRF_TRUSTED_ORIGINS = ['https://tu-app.onrender.com']
