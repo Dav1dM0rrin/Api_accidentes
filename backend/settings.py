@@ -78,11 +78,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'accidentesbaq',  # Cambia esto al nombre real de tu BD en MySQL
+        'NAME': 'railway',  # Cambia esto al nombre real de tu BD en MySQL
         'USER': 'root',
-        'PASSWORD': 'david1928',
-        'HOST': 'localhost',  # O la IP del servidor MySQL
-        'PORT': '3306',
+        'PASSWORD': 'tXsaMSJUEjYCYQEiiTgefyDBeKOsqmGX',
+        'HOST': 'trolley.proxy.rlwy.net',  # O la IP del servidor MySQL
+        'PORT': '12478',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
         }
